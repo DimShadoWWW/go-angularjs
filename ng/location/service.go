@@ -3,7 +3,7 @@ package location
 import "github.com/gopherjs/gopherjs/js"
 
 type Service struct {
-	*js.Object `ajs-controller:"$location"`
+	*js.Object `ajs-service:"$location"`
 }
 
 func (s *Service) GetUrl() string {

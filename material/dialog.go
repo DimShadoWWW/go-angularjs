@@ -1,6 +1,7 @@
 package material
 
 import "github.com/gopherjs/gopherjs/js"
+import "github.com/AmandaCameron/go-angularjs"
 
 type DialogService struct {
 	*js.Object `ajs-service:"$mdDialog"`
@@ -11,18 +12,24 @@ func (s *DialogService) Alert() *PresetDialog {
 }
 
 func (s *DialogService) Show(dlg Dialog) {
-	s.Call("show", dlg.Build())
+	s.Call("show", dlg.BuildDialog())
 }
 
 func (s *DialogService) Hide(dlg Dialog) {
-	s.Call("hide", dlg.Build())
+	if dlg != nil {
+		s.Call("hide", dlg.BuildDialog())
+	} else {
+		s.Call("hide")
+	}
 }
 
 type CustomDialog struct {
 	*js.Object
 
+	Controller interface{}
+
 	Template            string            `js:"template"`
-	Controller          string            `js:"controller"`
+	TemplateURL         string            `js:"templateUrl"`
 	Locals              map[string]string `js:"locals"`
 	Backdrop            bool              `js:"hasBackdrop"`
 	EscapeToClose       bool              `js:"escapeToClose"`
@@ -31,19 +38,36 @@ type CustomDialog struct {
 	DisableParentScroll bool              `js:"disableParentScroll"`
 }
 
-func (dlg *CustomDialog) Build() *js.Object {
+func NewDialog() *CustomDialog {
+	return &CustomDialog{
+		Object: js.Global.Get("Object").New(),
+	}
+}
+
+func (dlg *CustomDialog) BuildDialog() *js.Object {
+	if str, ok := dlg.Controller.(string); ok {
+		dlg.Set("controller", str)
+	} else {
+		controller, err := angularjs.Annotate(dlg.Controller, angularjs.AnnotServices)
+		if err != nil {
+			panic(err)
+		}
+
+		dlg.Set("controller", controller)
+	}
+
 	return dlg.Object
 }
 
 type Dialog interface {
-	Build() *js.Object
+	BuildDialog() *js.Object
 }
 
 type PresetDialog struct {
 	*js.Object
 }
 
-func (dlg *PresetDialog) Build() *js.Object {
+func (dlg *PresetDialog) BuildDialog() *js.Object {
 	return dlg.Object
 }
 

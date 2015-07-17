@@ -22,10 +22,22 @@ func (e *JQueryElement) On(events string, handler func(*Event)) {
 	})
 }
 
+func (e *JQueryElement) Attr(name string) *js.Object {
+	return e.Call("attr", name)
+}
+
+func (e *JQueryElement) SetAttr(name string, value interface{}) {
+	e.Call("attr", name, value)
+}
+
 func (e *JQueryElement) Val() *js.Object {
 	return e.Call("val")
 }
 
 func (e *JQueryElement) SetVal(value interface{}) {
 	e.Call("val", value)
+}
+
+func (e *JQueryElement) Watch(prop string, cb interface{}) {
+	e.Call("scope").Call("$watch", prop, cb)
 }

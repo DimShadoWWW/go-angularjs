@@ -1,5 +1,6 @@
 package material
 
+/*
 type SideNav struct {
 	*js.Object `ajs-service:"$mdSidenav"`
 }
@@ -23,3 +24,4 @@ func (s *SideNav) IsOpen(compId string) bool {
 func (s *SideNav) IsLockedOpen(compId string) bool {
 	return s.Invoke(compId).Call("isLockedOpen").Bool()
 }
+*/
