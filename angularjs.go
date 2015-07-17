@@ -10,31 +10,23 @@ func (m *Module) NewController(name string, constructor func(scope *Scope)) {
 	}})
 }
 
-func (m *Module) Service(name string, cls interface{}) error {
+func (m *Module) Factory(name string, cls interface{}) error {
 	var err error
-
-	// if err := funcReturn(cls, nil); err != nil {
-	// 	return err
-	// }
 
 	arg, err := buildParams(cls, "ajs-service")
 	if err != nil {
-		println("Error building controller params: ", err.Error(), "controller: ", name)
+		println("Error building factory params: ", err.Error(), "factory: ", name)
 
 		return err
 	}
 
-	m.Call("service", name, arg)
+	m.Call("factory", name, arg)
 
 	return nil
 }
 
 func (m *Module) Controller(name string, cls interface{}) error {
 	var err error
-
-	// if err := funcReturn(cls, nil); err != nil {
-	// 	return err
-	// }
 
 	arg, err := buildParams(cls, "ajs-service")
 	if err != nil {
@@ -108,6 +100,8 @@ func (m *Module) Filter(name string, val interface{}) error {
 func (m *Module) Directive(name string, cb interface{}) error {
 	arg, err := buildParams(cb, "ajs-service")
 	if err != nil {
+		println("Error building directive params: ", err.Error(), "directive:", name)
+		
 		return err
 	}
 

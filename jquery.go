@@ -2,10 +2,20 @@ package angularjs
 
 import "github.com/gopherjs/gopherjs/js"
 
-type JQueryElement struct{ *js.Object }
+type JQueryElement struct{
+	*js.Object `ajs-service:"element"`
+}
 
 func ElementById(id string) *JQueryElement {
 	return &JQueryElement{js.Global.Get("angular").Call("element", js.Global.Get("document").Call("getElementById", id))}
+}
+
+func (e *JQueryElement) Text() string {
+	return e.Call("text").String()
+}
+
+func (e *JQueryElement) SetText(val string) {
+	e.Call("text", val)
 }
 
 func (e *JQueryElement) Prop(name string) *js.Object {
