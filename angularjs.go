@@ -110,6 +110,10 @@ func (m *Module) Directive(name string, cb interface{}) error {
 	return nil
 }
 
+func (m *Module) NewDirective(name string, factory func() map[string]interface{}) {
+   m.Call("directive", name, factory)
+}
+
 type Scope struct {
 	*js.Object `ajs-service:"$scope"`
 }
